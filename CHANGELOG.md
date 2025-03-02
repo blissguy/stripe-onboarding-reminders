@@ -23,3 +23,4 @@ All notable changes to the Stripe Onboarding Reminders plugin will be documented
 - Top-level admin menu for easier access
 - Modern UI with toggle switches
 - Admin notification feature to receive copies of vendor emails
+/* Force sync: Sun Mar  2 22:03:30 GMT 2025 */
