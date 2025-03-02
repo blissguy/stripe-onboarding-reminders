@@ -390,4 +390,3 @@ class Stripe_Onboarding_Reminders_Email_Templates
         return str_replace(array_keys($replacements), array_values($replacements), $content);
     }
 }
-/* Force sync: Sun Mar  2 22:03:30 GMT 2025 */

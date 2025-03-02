@@ -140,4 +140,3 @@ function stripe_onboarding_reminders_init()
 
 // Start the plugin
 stripe_onboarding_reminders_init();
-/* Force sync: Sun Mar  2 22:03:30 GMT 2025 */

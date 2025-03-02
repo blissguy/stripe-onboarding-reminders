@@ -342,4 +342,3 @@ msgstr ""
 
 #: includes/class-email-templates.php:214
 msgid "Date:"
-msgstr "" /* Force sync: Sun Mar  2 22:03:30 GMT 2025 */

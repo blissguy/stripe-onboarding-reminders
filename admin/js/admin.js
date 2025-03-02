@@ -380,4 +380,3 @@ window.sorSettings = window.sorSettings || {};
   // Initialize when document is ready
   $(document).ready(initAdmin);
 })(jQuery);
-/* Force sync: Sun Mar  2 22:03:30 GMT 2025 */

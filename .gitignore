@@ -48,4 +48,3 @@ wp-content/wp-cache-config.php
 # Environment files
 .env
 .env.*
-!.env.example /* Force sync: Sun Mar  2 22:03:30 GMT 2025 */
