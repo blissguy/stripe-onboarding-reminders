@@ -2,6 +2,24 @@
 
 All notable changes to the Stripe Onboarding Reminders plugin will be documented in this file.
 
+## [1.0.1] - 2025-03-03
+
+### Fixed
+
+- Security improvements with proper nonce verification throughout the admin interface
+- Fixed type errors when handling user IDs with strict type checking
+- Improved input sanitization for all form submissions
+- Enhanced security by properly handling $\_REQUEST parameters
+- Fixed issues with status filter and search functionality in the Users tab
+- Added proper tab parameter persistence to maintain tab selection after form submission
+
+### Improved
+
+- Centralized status label management for consistency across the plugin
+- Enhanced error handling for user status checks
+- Improved helper methods for nonce verification
+- Updated admin UI styling for better usability
+
 ## [1.0.0] - 2025-03-02
 
 ### Added

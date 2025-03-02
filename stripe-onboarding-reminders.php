@@ -4,7 +4,7 @@
  * Plugin Name: Stripe Onboarding Reminders
  * Plugin URI: https://github.com/blissguy/stripe-onboarding-reminders
  * Description: Automatically send reminder emails to users who haven't completed their Stripe onboarding process.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Greyweb Consulting
  * Author URI: https://greywebconsulting.com
  * Text Domain: stripe-onboarding-reminders
