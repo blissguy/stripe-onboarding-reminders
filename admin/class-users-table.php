@@ -442,6 +442,7 @@ class Stripe_Onboarding_Reminders_Users_Table extends WP_List_Table
         echo '<form method="get">';
         echo '<input type="hidden" name="page" value="', esc_attr($_REQUEST['page'] ?? ''), '" />';
         // Add tab parameter to ensure form submission stays on the users tab
+        // This fixes the issue with filter and search redirecting to the settings tab
         echo '<input type="hidden" name="tab" value="users" />';
 
         // Status filter dropdown
