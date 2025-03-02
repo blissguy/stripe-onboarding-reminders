@@ -183,17 +183,12 @@ class Stripe_Onboarding_Reminders_Admin
 
         // Status toggles - one for each status
         foreach (['active_no_shipping', 'pending', 'not_setup'] as $status) {
-            // Get status display text that matches the badge
-            $status_text = match ($status) {
-                'active_no_shipping' => 'Active - No Shipping',
-                'pending' => 'Pending',
-                'not_setup' => 'Not Setup',
-                default => $this->core->get_status_display_name($status)
-            };
+            // Get status display name from core
+            $status_text = $this->core->get_status_display_name($status);
 
             add_settings_field(
                 "enable_{$status}",
-                sprintf(__('%s Reminders', 'stripe-onboarding-reminders'), $status_text),
+                sprintf(__('%s', 'stripe-onboarding-reminders'), $status_text),
                 [$this, 'render_toggle_field'],
                 'stripe_onboarding_reminders',
                 'stripe_onboarding_reminders_notifications',
@@ -605,16 +600,8 @@ class Stripe_Onboarding_Reminders_Admin
                                 <div class="sor-form-group">
                                     <label for="debug_status"><?php esc_html_e('Status to simulate', 'stripe-onboarding-reminders'); ?></label>
                                     <select id="debug_status" name="debug_status" class="regular-text">
-                                        <?php
-                                        // Status display names - matching the users table
-                                        $status_texts = [
-                                            'not_setup' => 'Not Setup',
-                                            'pending' => 'Pending',
-                                            'active_no_shipping' => 'Active - No Shipping',
-                                        ];
-
-                                        foreach (['active_no_shipping', 'pending', 'not_setup'] as $status) : ?>
-                                            <option value="<?php echo esc_attr($status); ?>"><?php echo esc_html($status_texts[$status]); ?></option>
+                                        <?php foreach (['active_no_shipping', 'pending', 'not_setup'] as $status) : ?>
+                                            <option value="<?php echo esc_attr($status); ?>"><?php echo esc_html($this->core->get_status_display_name($status)); ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
@@ -666,20 +653,13 @@ class Stripe_Onboarding_Reminders_Admin
                                 <hr>
 
                                 <?php
-                                // Status display names - matching the users table
-                                $status_texts = [
-                                    'not_setup' => __('Not Setup', 'stripe-onboarding-reminders'),
-                                    'pending' => __('Pending', 'stripe-onboarding-reminders'),
-                                    'active_no_shipping' => __('Active - No Shipping', 'stripe-onboarding-reminders'),
-                                ];
-
                                 // Get settings
                                 $settings = $this->core->get_settings();
                                 $default_settings = $this->core->get_default_settings();
 
                                 // Loop through each status to create template editors
                                 foreach (['active_no_shipping', 'pending', 'not_setup'] as $status) :
-                                    $status_label = $status_texts[$status] ?? $status;
+                                    $status_label = $this->core->get_status_display_name($status);
                                     $template_content = $settings['templates'][$status] ?? $default_settings['templates'][$status];
                                     $subject_value = $settings['subjects'][$status] ?? $default_settings['subjects'][$status];
                                     $button_text = $settings['button_text'][$status] ?? $default_settings['button_text'][$status];

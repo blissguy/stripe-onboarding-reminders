@@ -75,9 +75,9 @@ class Stripe_Onboarding_Reminders_Core
     private function setup_status_descriptions(): void
     {
         $this->status_descriptions = [
-            'active_no_shipping' => __('Account active but missing shipping information', 'stripe-onboarding-reminders'),
-            'pending' => __('Incomplete Stripe account', 'stripe-onboarding-reminders'),
-            'not_setup' => __('Stripe account not set up', 'stripe-onboarding-reminders'),
+            'active_no_shipping' => __('Active - No Shipping', 'stripe-onboarding-reminders'),
+            'pending' => __('Pending', 'stripe-onboarding-reminders'),
+            'not_setup' => __('Not Setup', 'stripe-onboarding-reminders'),
         ];
     }
 
