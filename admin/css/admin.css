@@ -1,0 +1,276 @@
+/**
+ * Admin CSS for Stripe Onboarding Reminders
+ *
+ * @package Stripe_Onboarding_Reminders
+ */
+
+/* Main Layout */
+.sor-admin-wrap {
+  margin: 20px auto;
+  width: 90rem;
+  max-width: 100%;
+}
+
+.sor-admin-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.sor-admin-main {
+  flex: 1;
+  min-width: 500px;
+  margin-right: 20px;
+}
+
+.sor-admin-main.full-width {
+  width: 100%;
+  max-width: 1200px;
+}
+
+.sor-admin-sidebar {
+  width: 300px;
+}
+
+@media (max-width: 782px) {
+  .sor-admin-container {
+    flex-direction: column;
+  }
+
+  .sor-admin-main {
+    margin-right: 0;
+    min-width: auto;
+    width: 100%;
+  }
+
+  .sor-admin-sidebar {
+    width: 100%;
+  }
+}
+
+/* Card Styling */
+.sor-settings-card {
+  background: #fff;
+  border: 1px solid #ccd0d4;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.sor-settings-card h2:first-child,
+.sor-settings-card h3:first-child {
+  margin-top: 0;
+}
+
+/* Form Elements */
+.sor-form-group {
+  margin-bottom: 15px;
+}
+
+.sor-form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+#sor-debug-form > .sor-form-group :is(select, input) {
+  width: 100%;
+}
+
+.sor-checkbox-group {
+  margin-top: 5px;
+}
+
+.sor-checkbox {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.sor-checkbox-label {
+  margin-left: 8px;
+}
+
+/* Toggle Switch Styling */
+.sor-toggle-switch-container {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.sor-toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+
+.sor-toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.sor-toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 24px;
+}
+
+.sor-toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .sor-toggle-slider {
+  background-color: #2196f3;
+}
+
+input:focus + .sor-toggle-slider {
+  box-shadow: 0 0 1px #2196f3;
+}
+
+input:checked + .sor-toggle-slider:before {
+  transform: translateX(26px);
+}
+
+/* Response Messages */
+#sor-test-response,
+#sor-debug-response {
+  margin-top: 15px;
+}
+
+#sor-test-response .notice,
+#sor-debug-response .notice {
+  padding: 8px 12px;
+  margin: 0;
+}
+
+/* Settings Form Improvements */
+#sor-settings-form .form-table th,
+#sor-templates-form .form-table th {
+  padding-top: 20px;
+  font-weight: 600;
+}
+
+#sor-settings-form .form-table td,
+#sor-templates-form .form-table td {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+#sor-settings-form .submit,
+#sor-templates-form .submit {
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 20px;
+}
+
+/* Section Titles */
+#sor-settings-form h2,
+#sor-templates-form h2 {
+  font-size: 1.3em;
+  margin: 1.5em 0 0.5em;
+  padding: 0 0 5px 0;
+  border-bottom: 1px solid #eee;
+}
+
+/* Template Styles */
+.sor-template-section {
+  margin-bottom: 2em;
+  padding-bottom: 1em;
+}
+
+.sor-template-section h3 {
+  margin-top: 1.5em;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+}
+
+.sor-placeholders-list {
+  background: #f8f9fa;
+  padding: 15px 20px;
+  border-left: 4px solid #2271b1;
+  margin-bottom: 20px;
+}
+
+.sor-placeholders-list code {
+  background: #e9e9e9;
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-size: 13px;
+}
+
+.wp-editor-container {
+  margin-top: 5px;
+}
+
+hr {
+  margin: 30px 0;
+  border: 0;
+  height: 1px;
+  background-color: #ddd;
+}
+
+/* Users table styles */
+.sor-users-table-wrapper {
+  width: 100%;
+}
+
+.sor-table-filters {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.sor-table-filters select {
+  margin-right: 8px;
+}
+
+.sor-table-filters .search-box {
+  float: right;
+  margin-left: auto;
+}
+
+.sor-refresh-table {
+  margin-right: 10px;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 782px) {
+  .sor-admin-container {
+    flex-direction: column;
+  }
+
+  .sor-admin-main {
+    margin-right: 0;
+    min-width: auto;
+    width: 100%;
+  }
+
+  .sor-admin-sidebar {
+    width: 100%;
+  }
+
+  .sor-table-filters {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .sor-table-filters .search-box {
+    margin-left: 0;
+    margin-top: 10px;
+    float: none;
+  }
+}

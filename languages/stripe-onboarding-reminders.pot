@@ -1,0 +1,345 @@
+# Copyright (C) 2023 Your Name
+# This file is distributed under the same license as the Stripe Onboarding Reminders plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: Stripe Onboarding Reminders 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/stripe-onboarding-reminders\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2023-08-10T10:00:00+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.7.1\n"
+"X-Domain: stripe-onboarding-reminders\n"
+
+#. Plugin Name of the plugin
+msgid "Stripe Onboarding Reminders"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://example.com/stripe-onboarding-reminders"
+msgstr ""
+
+#. Description of the plugin
+msgid "Automatically send reminder emails to users who haven't completed their Stripe onboarding process."
+msgstr ""
+
+#. Author of the plugin
+msgid "Your Name"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://example.com"
+msgstr ""
+
+#: admin/class-admin.php:50
+msgid "Stripe Reminders"
+msgstr ""
+
+#: admin/class-admin.php:73
+msgid "General Settings"
+msgstr ""
+
+#: admin/class-admin.php:82
+msgid "Email Settings"
+msgstr ""
+
+#: admin/class-admin.php:91
+msgid "Notification Settings"
+msgstr ""
+
+#: admin/class-admin.php:104
+msgid "From Name"
+msgstr ""
+
+#: admin/class-admin.php:108
+msgid "Name that will appear in the from field of the email"
+msgstr ""
+
+#: admin/class-admin.php:119
+msgid "From Email"
+msgstr ""
+
+#: admin/class-admin.php:123
+msgid "Email address that will be used as the sender (leave blank to use WordPress default)"
+msgstr ""
+
+#: admin/class-admin.php:134
+msgid "Payout Settings URL"
+msgstr ""
+
+#: admin/class-admin.php:138
+msgid "URL to the payout settings page (e.g., /dashboard/payout-settings/)"
+msgstr ""
+
+#: admin/class-admin.php:149
+msgid "Email Frequency (days)"
+msgstr ""
+
+#: admin/class-admin.php:153
+msgid "Minimum number of days between emails to the same user"
+msgstr ""
+
+#: admin/class-admin.php:166
+msgid "Enable %s Emails"
+msgstr ""
+
+#: admin/class-admin.php:170
+msgid "Send reminders to users with %s status"
+msgstr ""
+
+#: admin/class-admin.php:181
+msgid "%s Subject"
+msgstr ""
+
+#: admin/class-admin.php:185
+msgid "Email subject for %s status reminders"
+msgstr ""
+
+#: admin/class-admin.php:198
+msgid "Send Admin Copies"
+msgstr ""
+
+#: admin/class-admin.php:202
+msgid "Send a copy of all reminder emails to the admin"
+msgstr ""
+
+#: admin/class-admin.php:213
+msgid "Admin Email"
+msgstr ""
+
+#: admin/class-admin.php:217
+msgid "Email address for admin copies (leave blank to use site admin email)"
+msgstr ""
+
+#: admin/class-admin.php:230
+msgid "Configure general settings for the Stripe onboarding reminder emails."
+msgstr ""
+
+#: admin/class-admin.php:240
+msgid "Configure email sender details and admin notification options."
+msgstr ""
+
+#: admin/class-admin.php:250
+msgid "Enable/disable and customize notifications for each type of Stripe account status."
+msgstr ""
+
+#: admin/class-admin.php:320
+msgid "Security check failed."
+msgstr ""
+
+#: admin/class-admin.php:325
+msgid "You do not have permission to perform this action."
+msgstr ""
+
+#: admin/class-admin.php:343
+msgid "Test email sent to %d user."
+msgid_plural "Test emails sent to %d users."
+msgstr[0] ""
+msgstr[1] ""
+
+#: admin/class-admin.php:351
+msgid "No users found with the specified statuses. No emails were sent."
+msgstr ""
+
+#: admin/class-admin.php:383
+msgid "Sending..."
+msgstr ""
+
+#: admin/class-admin.php:384
+msgid "Send Test Emails"
+msgstr ""
+
+#: admin/class-admin.php:402
+msgid "Settings saved."
+msgstr ""
+
+#: admin/class-admin.php:424
+msgid "Save Settings"
+msgstr ""
+
+#: admin/class-admin.php:431
+msgid "Test Email Functionality"
+msgstr ""
+
+#: admin/class-admin.php:432
+msgid "Send test emails to users with incomplete Stripe onboarding."
+msgstr ""
+
+#: admin/class-admin.php:436
+msgid "User Status"
+msgstr ""
+
+#: admin/class-admin.php:448
+msgid "Limit per status"
+msgstr ""
+
+#: admin/class-admin.php:450
+msgid "Maximum number of emails to send per status"
+msgstr ""
+
+#: admin/class-admin.php:454
+msgid "Send Test Emails"
+msgstr ""
+
+#: admin/class-admin.php:462
+msgid "About This Plugin"
+msgstr ""
+
+#: admin/class-admin.php:463
+msgid "This plugin automatically sends reminder emails to users who have not completed their Stripe onboarding process."
+msgstr ""
+
+#: admin/class-admin.php:464
+msgid "Emails are sent based on monthly schedule with rate limiting to prevent excessive notifications."
+msgstr ""
+
+#: includes/class-core.php:62
+msgid "Account active but missing shipping information"
+msgstr ""
+
+#: includes/class-core.php:63
+msgid "Incomplete Stripe account"
+msgstr ""
+
+#: includes/class-core.php:64
+msgid "Stripe account not set up"
+msgstr ""
+
+#: includes/class-core.php:84
+msgid "Action required: Complete your payout information"
+msgstr ""
+
+#: includes/class-core.php:85
+msgid "Reminder: Complete your Stripe onboarding"
+msgstr ""
+
+#: includes/class-core.php:86
+msgid "Set up your Stripe account to receive payments"
+msgstr ""
+
+#: includes/class-core.php:499
+msgid "This is a copy of an email sent to %s (%s)"
+msgstr ""
+
+#: includes/class-email-templates.php:82
+msgid "Hello %s,"
+msgstr ""
+
+#: includes/class-email-templates.php:91
+msgid "Why is this important?"
+msgstr ""
+
+#: includes/class-email-templates.php:92
+msgid "A complete Stripe account setup ensures that you can receive payments promptly and without disruption. Missing information can delay payouts or prevent you from receiving funds altogether."
+msgstr ""
+
+#: includes/class-email-templates.php:95
+msgid "If you have any questions or need assistance with your account setup, please contact our support team."
+msgstr ""
+
+#: includes/class-email-templates.php:97
+msgid "Thank you,"
+msgstr ""
+
+#: includes/class-email-templates.php:98
+msgid "Team"
+msgstr ""
+
+#: includes/class-email-templates.php:103
+msgid "This is an automated reminder from %s. You are receiving this because you have an incomplete Stripe onboarding process."
+msgstr ""
+
+#: includes/class-email-templates.php:125
+msgid "Your Stripe account is active, but you need to provide your shipping information to start receiving payouts."
+msgstr ""
+
+#: includes/class-email-templates.php:126
+msgid "Without this information, you may experience delays in receiving your funds."
+msgstr ""
+
+#: includes/class-email-templates.php:127
+msgid "What's missing:"
+msgstr ""
+
+#: includes/class-email-templates.php:127
+msgid "Shipping address and contact information"
+msgstr ""
+
+#: includes/class-email-templates.php:132
+msgid "Your Stripe account setup is incomplete. You need to finish setting up your account to start receiving payments."
+msgstr ""
+
+#: includes/class-email-templates.php:133
+msgid "At this point, you cannot receive any payments until you complete the required verification steps."
+msgstr ""
+
+#: includes/class-email-templates.php:134
+msgid "Required action:"
+msgstr ""
+
+#: includes/class-email-templates.php:134
+msgid "Complete the Stripe onboarding process by providing the requested information."
+msgstr ""
+
+#: includes/class-email-templates.php:139
+msgid "You have not set up your Stripe account yet. Setting up your account is necessary to receive payments through our platform."
+msgstr ""
+
+#: includes/class-email-templates.php:140
+msgid "Until you complete this setup, you won't be able to receive any payments for your products or services."
+msgstr ""
+
+#: includes/class-email-templates.php:141
+msgid "Start the Stripe account creation and verification process."
+msgstr ""
+
+#: includes/class-email-templates.php:146
+msgid "Your Stripe account requires attention to ensure you can receive payments properly."
+msgstr ""
+
+#: includes/class-email-templates.php:147
+msgid "Please review your account settings to make sure everything is set up correctly."
+msgstr ""
+
+#: includes/class-email-templates.php:165
+msgid "Complete Shipping Information"
+msgstr ""
+
+#: includes/class-email-templates.php:168
+msgid "Complete Your Stripe Account"
+msgstr ""
+
+#: includes/class-email-templates.php:171
+msgid "Set Up Your Stripe Account"
+msgstr ""
+
+#: includes/class-email-templates.php:174
+msgid "Review Your Payout Settings"
+msgstr ""
+
+#: includes/class-email-templates.php:192
+msgid "[ADMIN COPY] Stripe Onboarding Reminder"
+msgstr ""
+
+#: includes/class-email-templates.php:210
+msgid "ADMIN COPY - This is a copy of an email sent to a user"
+msgstr ""
+
+#: includes/class-email-templates.php:211
+msgid "User:"
+msgstr ""
+
+#: includes/class-email-templates.php:212
+msgid "User ID:"
+msgstr ""
+
+#: includes/class-email-templates.php:213
+msgid "Status:"
+msgstr ""
+
+#: includes/class-email-templates.php:214
+msgid "Date:"
+msgstr "" 
