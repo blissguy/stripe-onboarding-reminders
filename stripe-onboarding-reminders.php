@@ -25,7 +25,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('STRIPE_ONBOARDING_REMINDERS_VERSION', '1.0.0');
+define('STRIPE_ONBOARDING_REMINDERS_VERSION', '1.0.1');
 define('STRIPE_ONBOARDING_REMINDERS_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('STRIPE_ONBOARDING_REMINDERS_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('STRIPE_ONBOARDING_REMINDERS_PLUGIN_FILE', __FILE__);
