@@ -441,6 +441,8 @@ class Stripe_Onboarding_Reminders_Users_Table extends WP_List_Table
         echo '<div class="sor-table-filters">';
         echo '<form method="get">';
         echo '<input type="hidden" name="page" value="', esc_attr($_REQUEST['page'] ?? ''), '" />';
+        // Add tab parameter to ensure form submission stays on the users tab
+        echo '<input type="hidden" name="tab" value="users" />';
 
         // Status filter dropdown
         $this->status_filter_dropdown();

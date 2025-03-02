@@ -232,22 +232,77 @@ hr {
   margin-bottom: 15px;
   display: flex;
   align-items: center;
+  gap: 10px;
 }
 
-.sor-table-filters select {
-  margin-right: 8px;
+.sor-table-filters form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.sor-table-filters select,
+.sor-table-filters input[type="text"],
+.sor-table-filters input[type="search"] {
+  height: 36px;
+  padding: 0 8px;
+  border-radius: 4px;
+  border: 1px solid #7e8993;
+  min-width: 200px;
+}
+
+.sor-table-filters .button,
+.sor-table-filters .button-secondary {
+  height: 36px;
+  min-height: 36px;
+  line-height: 34px;
+  padding: 0 12px;
+  text-align: center;
 }
 
 .sor-table-filters .search-box {
-  float: right;
   margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sor-table-filters #sor-user-search-input {
+  min-width: 200px;
+  margin: 0;
+}
+
+/* Target WordPress search elements more specifically */
+.sor-table-filters p.search-box {
+  margin: 0;
+  padding: 0;
+}
+
+.sor-table-filters p.search-box input[type="search"] {
+  height: 36px;
+  padding: 0 8px;
+  border-radius: 4px;
+  border: 1px solid #7e8993;
+  min-width: 200px;
+  margin: 0;
+  vertical-align: middle;
+}
+
+.sor-table-filters p.search-box .button {
+  height: 36px;
+  min-height: 36px;
+  line-height: 34px;
+  padding: 0 12px;
+  text-align: center;
+  vertical-align: middle;
 }
 
 .sor-refresh-table {
   margin-right: 10px;
 }
 
-/* Responsive adjustments */
+/* Responsive adjustments for user table filters */
 @media screen and (max-width: 782px) {
   .sor-admin-container {
     flex-direction: column;
@@ -263,7 +318,7 @@ hr {
     width: 100%;
   }
 
-  .sor-table-filters {
+  .sor-table-filters form {
     flex-direction: column;
     align-items: flex-start;
   }
@@ -271,6 +326,12 @@ hr {
   .sor-table-filters .search-box {
     margin-left: 0;
     margin-top: 10px;
-    float: none;
+    width: 100%;
+  }
+
+  .sor-table-filters select,
+  .sor-table-filters #sor-user-search-input {
+    width: 100%;
+    max-width: 100%;
   }
 }
