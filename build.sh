@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Build script for Stripe Onboarding Reminders WordPress plugin
+# Build script for Stripe Onboarding Reminders WordPress plugin run
 # This script creates a properly structured ZIP file for distribution
 
 # Get the current version from the main plugin file
@@ -19,9 +19,11 @@ mkdir -p ./build/stripe-onboarding-reminders
 # Copy all plugin files to the build directory
 # Excluding development files and the build directory itself
 rsync -av --exclude='.git' \
+          --exclude='.github' \
           --exclude='.gitignore' \
           --exclude='build' \
           --exclude='build.sh' \
+          --exclude='repackage.sh' \
           --exclude='*.zip' \
           --exclude='.DS_Store' \
           --exclude='node_modules' \
