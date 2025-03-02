@@ -2,7 +2,7 @@
 
 All notable changes to the Stripe Onboarding Reminders plugin will be documented in this file.
 
-## [1.0.1] - 2025-03-03
+## [1.0.1] - 2025-03-02
 
 ### Fixed
 
