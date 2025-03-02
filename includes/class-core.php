@@ -75,7 +75,9 @@ class Stripe_Onboarding_Reminders_Core
     private function setup_status_descriptions(): void
     {
         $this->status_descriptions = [
+            'active' => __('Active - Complete', 'stripe-onboarding-reminders'),
             'active_no_shipping' => __('Active - No Shipping', 'stripe-onboarding-reminders'),
+            'inactive' => __('Inactive', 'stripe-onboarding-reminders'),
             'pending' => __('Pending', 'stripe-onboarding-reminders'),
             'not_setup' => __('Not Setup', 'stripe-onboarding-reminders'),
         ];
@@ -202,7 +204,7 @@ class Stripe_Onboarding_Reminders_Core
         $this->log('Starting scheduled reminders...');
 
         // Check day of month - run on the 1st of each month
-        $day_of_month = date('j');
+        $day_of_month = gmdate('j');
         if ($day_of_month != 1) {
             $this->log('Not the 1st of the month, skipping reminders');
             return;
@@ -538,11 +540,11 @@ class Stripe_Onboarding_Reminders_Core
         }
 
         // Create log file path
-        $date = date('Y-m-d');
+        $date = gmdate('Y-m-d');
         $log_file = $log_dir . "/log-{$date}.log";
 
         // Format message
-        $time = date('Y-m-d H:i:s');
+        $time = gmdate('Y-m-d H:i:s');
         $formatted_message = "[{$time}] {$message}" . PHP_EOL;
 
         // Write to log file
@@ -678,7 +680,7 @@ class Stripe_Onboarding_Reminders_Core
     {
         // Validate the status
         if (!in_array($status, ['active_no_shipping', 'pending', 'not_setup'])) {
-            error_log('Invalid status: ' . $status);
+            $this->log('Invalid status: ' . $status);
             return false;
         }
 
@@ -721,7 +723,7 @@ class Stripe_Onboarding_Reminders_Core
         $result = wp_mail($email, $subject, $content, $headers);
 
         if (!$result) {
-            error_log('Failed to send test email to: ' . $email);
+            $this->log('Failed to send test email to: ' . $email);
         }
 
         return $result;

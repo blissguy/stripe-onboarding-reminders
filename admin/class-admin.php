@@ -98,6 +98,8 @@ class Stripe_Onboarding_Reminders_Admin
             'stripe_onboarding_reminders',
             'stripe_onboarding_reminders_settings',
             [
+                'type' => 'array',
+                'description' => __('Stripe Onboarding Reminders Settings', 'stripe-onboarding-reminders'),
                 'sanitize_callback' => [$this, 'sanitize_settings'],
                 'default' => $this->core->get_default_settings(),
             ]
@@ -267,6 +269,11 @@ class Stripe_Onboarding_Reminders_Admin
      */
     public function sanitize_settings($input): array
     {
+        // Ensure input is an array
+        if (!is_array($input)) {
+            $input = [];
+        }
+
         $sanitized = [];
 
         // Text fields
@@ -363,7 +370,7 @@ class Stripe_Onboarding_Reminders_Admin
             esc_attr($args['label_for']),
             esc_attr($value),
             esc_attr($class),
-            $data_attrs
+            wp_kses_post($data_attrs)
         );
 
         if (isset($args['description'])) {
@@ -490,7 +497,9 @@ class Stripe_Onboarding_Reminders_Admin
 
         // Settings updated notice
         if (isset($screen->id) && $screen->id === 'toplevel_page_stripe_onboarding_reminders') {
-            if (isset($_GET['settings-updated']) && $_GET['settings-updated']) {
+            // Check for settings-updated parameter with proper sanitization
+            if (isset($_GET['settings-updated']) && wp_unslash($_GET['settings-updated']) === '1') {
+                // Nonce verification is handled by WordPress settings API in options.php
 ?>
                 <div class="notice notice-success is-dismissible">
                     <p><?php esc_html_e('Settings saved.', 'stripe-onboarding-reminders'); ?></p>
@@ -520,17 +529,17 @@ class Stripe_Onboarding_Reminders_Admin
             return;
         }
 
-        // Get current tab
-        $current_tab = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 'settings';
+        // Get current tab with proper sanitization and unslashing
+        $current_tab = isset($_GET['tab']) ? sanitize_text_field(wp_unslash($_GET['tab'])) : 'settings';
 
         ?>
         <div class="wrap sor-admin-wrap">
             <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
 
             <nav class="nav-tab-wrapper">
-                <a href="<?php echo esc_url(admin_url('admin.php?page=stripe_onboarding_reminders&tab=settings')); ?>" class="nav-tab <?php echo $current_tab === 'settings' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Settings', 'stripe-onboarding-reminders'); ?></a>
-                <a href="<?php echo esc_url(admin_url('admin.php?page=stripe_onboarding_reminders&tab=templates')); ?>" class="nav-tab <?php echo $current_tab === 'templates' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Email Templates', 'stripe-onboarding-reminders'); ?></a>
-                <a href="<?php echo esc_url(admin_url('admin.php?page=stripe_onboarding_reminders&tab=users')); ?>" class="nav-tab <?php echo $current_tab === 'users' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Users', 'stripe-onboarding-reminders'); ?></a>
+                <a href="<?php echo esc_url(admin_url('admin.php?page=stripe_onboarding_reminders&tab=settings')); ?>" class="nav-tab <?php echo esc_attr($current_tab === 'settings' ? 'nav-tab-active' : ''); ?>"><?php esc_html_e('Settings', 'stripe-onboarding-reminders'); ?></a>
+                <a href="<?php echo esc_url(admin_url('admin.php?page=stripe_onboarding_reminders&tab=templates')); ?>" class="nav-tab <?php echo esc_attr($current_tab === 'templates' ? 'nav-tab-active' : ''); ?>"><?php esc_html_e('Email Templates', 'stripe-onboarding-reminders'); ?></a>
+                <a href="<?php echo esc_url(admin_url('admin.php?page=stripe_onboarding_reminders&tab=users')); ?>" class="nav-tab <?php echo esc_attr($current_tab === 'users' ? 'nav-tab-active' : ''); ?>"><?php esc_html_e('Users', 'stripe-onboarding-reminders'); ?></a>
             </nav>
 
             <div class="sor-admin-container">
@@ -665,7 +674,7 @@ class Stripe_Onboarding_Reminders_Admin
                                     $button_text = $settings['button_text'][$status] ?? $default_settings['button_text'][$status];
                                 ?>
                                     <div class="sor-template-section" id="template-<?php echo esc_attr($status); ?>">
-                                        <h3><?php echo sprintf(__('%s Status Template', 'stripe-onboarding-reminders'), esc_html($status_label)); ?></h3>
+                                        <h3><?php echo esc_html(sprintf(__('%s Status Template', 'stripe-onboarding-reminders'), esc_html($status_label))); ?></h3>
 
                                         <div class="sor-form-group">
                                             <label for="sor_subject_<?php echo esc_attr($status); ?>"><?php esc_html_e('Email Subject', 'stripe-onboarding-reminders'); ?></label>
@@ -770,21 +779,21 @@ class Stripe_Onboarding_Reminders_Admin
     public function ajax_send_test_emails(): void
     {
         // Check nonce and capabilities
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'sor_admin_nonce') || !current_user_can('manage_options')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(wp_unslash($_POST['nonce']), 'sor_admin_nonce') || !current_user_can('manage_options')) {
             wp_send_json_error(['message' => __('Security check failed.', 'stripe-onboarding-reminders')]);
         }
 
-        // Get statuses
+        // Get statuses with proper sanitization
         $statuses = isset($_POST['statuses']) && is_array($_POST['statuses'])
-            ? array_map('sanitize_text_field', $_POST['statuses'])
+            ? array_map('sanitize_text_field', array_map('wp_unslash', $_POST['statuses']))
             : [];
 
         if (empty($statuses)) {
             wp_send_json_error(['message' => __('No statuses selected.', 'stripe-onboarding-reminders')]);
         }
 
-        // Check if we should bypass rate limiting
-        $bypass_rate_limit = isset($_POST['bypass_rate_limit']) && $_POST['bypass_rate_limit'] === 'true';
+        // Check if we should bypass rate limiting with proper sanitization
+        $bypass_rate_limit = isset($_POST['bypass_rate_limit']) && wp_unslash($_POST['bypass_rate_limit']) === 'true';
 
         // Send emails to all users with the selected statuses
         $sent_count = 0;
@@ -850,12 +859,12 @@ class Stripe_Onboarding_Reminders_Admin
     public function ajax_send_manual_reminder(): void
     {
         // Check nonce and capabilities
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'sor_admin_nonce') || !current_user_can('manage_options')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(wp_unslash($_POST['nonce']), 'sor_admin_nonce') || !current_user_can('manage_options')) {
             wp_send_json_error(['message' => __('Security check failed.', 'stripe-onboarding-reminders')]);
         }
 
-        // Get user ID
-        $user_id = isset($_POST['user_id']) ? intval($_POST['user_id']) : 0;
+        // Get user ID with proper sanitization
+        $user_id = isset($_POST['user_id']) ? intval(wp_unslash($_POST['user_id'])) : 0;
 
         if ($user_id <= 0) {
             wp_send_json_error(['message' => __('Invalid user ID.', 'stripe-onboarding-reminders')]);
@@ -887,13 +896,13 @@ class Stripe_Onboarding_Reminders_Admin
     public function ajax_send_debug_email(): void
     {
         // Check nonce and capabilities
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'sor_admin_nonce') || !current_user_can('manage_options')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(wp_unslash($_POST['nonce']), 'sor_admin_nonce') || !current_user_can('manage_options')) {
             wp_send_json_error(['message' => __('Security check failed.', 'stripe-onboarding-reminders')]);
         }
 
-        // Get status and email
-        $status = isset($_POST['status']) ? sanitize_text_field($_POST['status']) : '';
-        $email = isset($_POST['email']) ? sanitize_email($_POST['email']) : '';
+        // Get status and email with proper sanitization
+        $status = isset($_POST['status']) ? sanitize_text_field(wp_unslash($_POST['status'])) : '';
+        $email = isset($_POST['email']) ? sanitize_email(wp_unslash($_POST['email'])) : '';
 
         // Validate input
         if (empty($status)) {

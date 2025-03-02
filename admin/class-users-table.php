@@ -33,17 +33,34 @@ class Stripe_Onboarding_Reminders_Users_Table extends WP_List_Table
     /**
      * Constructor
      *
-     * @param Stripe_Onboarding_Reminders_Core $core Core class instance
+     * @param Stripe_Onboarding_Reminders_Core $core Core plugin instance
      */
     public function __construct($core)
     {
         $this->core = $core;
 
         parent::__construct([
-            'singular' => __('User', 'stripe-onboarding-reminders'),
-            'plural'   => __('Users', 'stripe-onboarding-reminders'),
+            'singular' => __('user', 'stripe-onboarding-reminders'),
+            'plural'   => __('users', 'stripe-onboarding-reminders'),
             'ajax'     => false,
         ]);
+    }
+
+    /**
+     * Verify nonce for form submissions
+     *
+     * @param string $action Nonce action to verify against
+     * @return bool Whether the nonce is valid
+     */
+    private function verify_nonce(string $action = 'stripe_onboarding_reminders_user_filter'): bool
+    {
+        // Return false if no nonce is present
+        if (!isset($_REQUEST['_wpnonce'])) {
+            return false;
+        }
+
+        // Return result of nonce verification
+        return wp_verify_nonce(wp_unslash($_REQUEST['_wpnonce']), $action);
     }
 
     /**
@@ -52,7 +69,7 @@ class Stripe_Onboarding_Reminders_Users_Table extends WP_List_Table
     public function process_bulk_action(): void
     {
         // Security check
-        $nonce = isset($_REQUEST['_wpnonce']) ? $_REQUEST['_wpnonce'] : '';
+        $nonce = isset($_REQUEST['_wpnonce']) ? wp_unslash($_REQUEST['_wpnonce']) : '';
         if (!wp_verify_nonce($nonce, 'bulk-' . $this->_args['plural'])) {
             return;
         }
@@ -64,7 +81,7 @@ class Stripe_Onboarding_Reminders_Users_Table extends WP_List_Table
         }
 
         // Get user IDs from request
-        $user_ids = isset($_REQUEST['users']) ? array_map('intval', $_REQUEST['users']) : [];
+        $user_ids = isset($_REQUEST['users']) ? array_map('intval', wp_unslash($_REQUEST['users'])) : [];
         if (empty($user_ids)) {
             return;
         }
@@ -114,7 +131,7 @@ class Stripe_Onboarding_Reminders_Users_Table extends WP_List_Table
      */
     public function prepare_items(): void
     {
-        // Process bulk actions if any
+        // Process bulk actions
         $this->process_bulk_action();
 
         // Set up columns
@@ -126,10 +143,14 @@ class Stripe_Onboarding_Reminders_Users_Table extends WP_List_Table
         // Get all users with incomplete Stripe onboarding
         $all_users = $this->get_incomplete_onboarding_users();
 
-        // Handle sorting
-        $orderby = isset($_REQUEST['orderby']) ? sanitize_text_field($_REQUEST['orderby']) : 'user_login';
-        $order = isset($_REQUEST['order']) ? sanitize_text_field($_REQUEST['order']) : 'asc';
-        $all_users = $this->sort_users($all_users, $orderby, $order);
+        // Only process sorting if nonce is valid or if we're on the initial page load (no filter_action)
+        $is_filter_request = isset($_REQUEST['filter_action']) || isset($_REQUEST['s']);
+        if (!$is_filter_request || $this->verify_nonce()) {
+            // Handle sorting
+            $orderby = isset($_REQUEST['orderby']) ? sanitize_text_field(wp_unslash($_REQUEST['orderby'])) : 'user_login';
+            $order = isset($_REQUEST['order']) ? sanitize_text_field(wp_unslash($_REQUEST['order'])) : 'asc';
+            $all_users = $this->sort_users($all_users, $orderby, $order);
+        }
 
         // Pagination
         $per_page = 20;
@@ -139,7 +160,7 @@ class Stripe_Onboarding_Reminders_Users_Table extends WP_List_Table
         $this->set_pagination_args([
             'total_items' => $total_items,
             'per_page'    => $per_page,
-            'total_pages' => ceil($total_items / $per_page),
+            'total_pages' => ceil($total_items / $per_page)
         ]);
 
         // Slice data for current page
@@ -156,10 +177,21 @@ class Stripe_Onboarding_Reminders_Users_Table extends WP_List_Table
         $incomplete_users = [];
         $valid_statuses = ['not_setup', 'pending', 'active_no_shipping'];
 
-        // Filter by status if requested
-        $filter_status = isset($_REQUEST['status']) && in_array($_REQUEST['status'], $valid_statuses)
-            ? $_REQUEST['status']
-            : null;
+        // Check if we have a form submission
+        $is_filter_request = isset($_REQUEST['filter_action']) || isset($_REQUEST['s']);
+
+        // If this is a filter request, verify nonce
+        if ($is_filter_request && !$this->verify_nonce()) {
+            return $incomplete_users;
+        }
+
+        // Filter by status if requested (only if nonce verified or initial page load)
+        $filter_status = null;
+        if (!$is_filter_request || $this->verify_nonce()) {
+            $filter_status = isset($_REQUEST['status']) && in_array(wp_unslash(sanitize_text_field($_REQUEST['status'])), $valid_statuses, true)
+                ? sanitize_text_field(wp_unslash($_REQUEST['status']))
+                : null;
+        }
 
         // Get all users with the seller role
         $seller_users = get_users([
@@ -169,42 +201,43 @@ class Stripe_Onboarding_Reminders_Users_Table extends WP_List_Table
 
         // Check each user's vendor status
         foreach ($seller_users as $user) {
+            // Ensure user ID is an integer
             $user_id = (int) $user->ID;
             $status = $this->core->get_user_vendor_status($user_id);
 
-            // Only include users with one of our tracked statuses
-            if ($status && in_array($status, $valid_statuses)) {
-                // If filtering by status, only include matching users
-                if ($filter_status && $status !== $filter_status) {
-                    continue;
-                }
-
-                $incomplete_users[] = [
-                    'ID' => $user_id,
-                    'user_login' => $user->user_login,
-                    'display_name' => $user->display_name,
-                    'user_email' => $user->user_email,
-                    'status' => $status,
-                    'last_reminder' => $this->get_last_reminder_date($user_id),
-                ];
+            // Skip if no status or doesn't match filter
+            if (empty($status) || ($filter_status && $status !== $filter_status)) {
+                continue;
             }
+
+            // Add to results
+            $incomplete_users[] = [
+                'ID' => $user_id,
+                'user_login' => $user->user_login,
+                'display_name' => $user->display_name,
+                'user_email' => $user->user_email,
+                'status' => $status,
+                'last_reminder' => $this->get_last_reminder_date($user_id),
+            ];
         }
 
-        // Apply search if set
-        $search = isset($_REQUEST['s']) ? sanitize_text_field($_REQUEST['s']) : '';
-        if (!empty($search)) {
-            $filtered_users = [];
-            foreach ($incomplete_users as $user) {
-                // Search in username, display name, and email
-                if (
-                    stripos($user['user_login'], $search) !== false ||
-                    stripos($user['display_name'], $search) !== false ||
-                    stripos($user['user_email'], $search) !== false
-                ) {
-                    $filtered_users[] = $user;
+        // Apply search if set (only if nonce verified or initial page load)
+        if (!$is_filter_request || $this->verify_nonce()) {
+            $search = isset($_REQUEST['s']) ? sanitize_text_field(wp_unslash($_REQUEST['s'])) : '';
+            if (!empty($search)) {
+                $filtered_users = [];
+                foreach ($incomplete_users as $user) {
+                    // Search in username, display name, and email
+                    if (
+                        stripos($user['user_login'], $search) !== false ||
+                        stripos($user['display_name'], $search) !== false ||
+                        stripos($user['user_email'], $search) !== false
+                    ) {
+                        $filtered_users[] = $user;
+                    }
                 }
+                $incomplete_users = $filtered_users;
             }
-            $incomplete_users = $filtered_users;
         }
 
         return $incomplete_users;
@@ -218,7 +251,8 @@ class Stripe_Onboarding_Reminders_Users_Table extends WP_List_Table
      */
     private function get_last_reminder_date($user_id): string
     {
-        $user_id = intval($user_id); // Ensure user_id is an integer
+        // Ensure user_id is an integer
+        $user_id = (int) $user_id;
         $last_reminder = get_user_meta($user_id, 'stripe_onboarding_reminder_last_sent', true);
 
         if (empty($last_reminder)) {
@@ -303,8 +337,8 @@ class Stripe_Onboarding_Reminders_Users_Table extends WP_List_Table
     public function column_cb($item): string
     {
         return sprintf(
-            '<input type="checkbox" name="users[]" value="%s" />',
-            $item['ID']
+            '<input type="checkbox" name="users[]" value="%d" />',
+            (int) $item['ID']
         );
     }
 
@@ -316,7 +350,7 @@ class Stripe_Onboarding_Reminders_Users_Table extends WP_List_Table
      */
     public function column_user_login($item): string
     {
-        $user_edit_link = get_edit_user_link($item['ID']);
+        $user_edit_link = get_edit_user_link((int) $item['ID']);
 
         return sprintf(
             '<a href="%s">%s</a>',
@@ -344,7 +378,8 @@ class Stripe_Onboarding_Reminders_Users_Table extends WP_List_Table
                 return $this->get_formatted_status_badge($item['status']);
 
             default:
-                return print_r($item, true);
+                // Return empty string instead of using print_r for security
+                return esc_html(isset($item[$column_name]) ? $item[$column_name] : '');
         }
     }
 
@@ -359,23 +394,23 @@ class Stripe_Onboarding_Reminders_Users_Table extends WP_List_Table
         // Status styling configuration
         $status_styles = [
             'active' => [
-                'text'  => 'Active - Complete',
+                'text'  => $this->core->get_status_display_name('active') ?: 'Active - Complete',
                 'style' => 'background-color: #edfcef; color: #0f5132; padding: 4px 8px; border-radius: 4px; font-size: 12px;'
             ],
             'active_no_shipping' => [
-                'text'  => 'Active - No Shipping',
+                'text'  => $this->core->get_status_display_name('active_no_shipping'),
                 'style' => 'background-color: #fef3c7; color: #92400e; padding: 4px 8px; border-radius: 4px; font-size: 12px;'
             ],
             'inactive' => [
-                'text'  => 'Inactive',
+                'text'  => $this->core->get_status_display_name('inactive') ?: 'Inactive',
                 'style' => 'background-color: #fee2e2; color: #991b1b; padding: 4px 8px; border-radius: 4px; font-size: 12px;'
             ],
             'pending' => [
-                'text'  => 'Pending',
+                'text'  => $this->core->get_status_display_name('pending'),
                 'style' => 'background-color: #fff7ed; color: #9a3412; padding: 4px 8px; border-radius: 4px; font-size: 12px;'
             ],
             'not_setup' => [
-                'text'  => 'Not Setup',
+                'text'  => $this->core->get_status_display_name('not_setup'),
                 'style' => 'background-color: #f3f4f6; color: #374151; padding: 4px 8px; border-radius: 4px; font-size: 12px;'
             ]
         ];
@@ -402,11 +437,13 @@ class Stripe_Onboarding_Reminders_Users_Table extends WP_List_Table
      */
     public function column_actions($item): string
     {
-        $send_nonce = wp_create_nonce('sor_send_reminder_' . $item['ID']);
+        // Ensure user ID is an integer
+        $user_id = (int) $item['ID'];
+        $send_nonce = wp_create_nonce('sor_send_reminder_' . $user_id);
 
         $actions = sprintf(
             '<a href="#" class="button sor-send-reminder" data-user-id="%d" data-nonce="%s">%s</a>',
-            $item['ID'],
+            $user_id,
             $send_nonce,
             __('Send Reminder', 'stripe-onboarding-reminders')
         );
@@ -440,10 +477,17 @@ class Stripe_Onboarding_Reminders_Users_Table extends WP_List_Table
         // Display filter and search box
         echo '<div class="sor-table-filters">';
         echo '<form method="get">';
-        echo '<input type="hidden" name="page" value="', esc_attr($_REQUEST['page'] ?? ''), '" />';
+
+        // Sanitize and escape page parameter
+        $page = isset($_REQUEST['page']) ? sanitize_text_field(wp_unslash($_REQUEST['page'])) : '';
+        echo '<input type="hidden" name="page" value="', esc_attr($page), '" />';
+
         // Add tab parameter to ensure form submission stays on the users tab
         // This fixes the issue with filter and search redirecting to the settings tab
         echo '<input type="hidden" name="tab" value="users" />';
+
+        // Add nonce field for verification
+        wp_nonce_field('stripe_onboarding_reminders_user_filter', '_wpnonce', false);
 
         // Status filter dropdown
         $this->status_filter_dropdown();
@@ -463,21 +507,21 @@ class Stripe_Onboarding_Reminders_Users_Table extends WP_List_Table
      */
     private function status_filter_dropdown(): void
     {
-        // Status styling configuration - matching the badge display
-        $status_texts = [
-            'not_setup' => 'Not Setup',
-            'pending' => 'Pending',
-            'active_no_shipping' => 'Active - No Shipping',
-        ];
-
+        // Use core class for status text labels to maintain consistency
         $statuses = [
             'all' => __('All Statuses', 'stripe-onboarding-reminders'),
-            'not_setup' => $status_texts['not_setup'],
-            'pending' => $status_texts['pending'],
-            'active_no_shipping' => $status_texts['active_no_shipping'],
+            'not_setup' => $this->core->get_status_display_name('not_setup'),
+            'pending' => $this->core->get_status_display_name('pending'),
+            'active_no_shipping' => $this->core->get_status_display_name('active_no_shipping'),
         ];
 
-        $current = isset($_REQUEST['status']) ? sanitize_text_field($_REQUEST['status']) : 'all';
+        // Get current status, verifying nonce for filter requests
+        $is_filter_request = isset($_REQUEST['filter_action']);
+        if ($is_filter_request && !$this->verify_nonce()) {
+            $current = 'all';
+        } else {
+            $current = isset($_REQUEST['status']) ? sanitize_text_field(wp_unslash($_REQUEST['status'])) : 'all';
+        }
 
         echo '<select name="status">';
         foreach ($statuses as $value => $label) {
