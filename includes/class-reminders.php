@@ -225,7 +225,7 @@ class Stripe_Onboarding_Reminders_Core
         $rate_limit_days = intval($settings['rate_limit_days']);
 
         // Get cutoff date for rate limiting
-        $cutoff_date = date('Y-m-d H:i:s', strtotime("-$rate_limit_days days"));
+        $cutoff_date = gmdate('Y-m-d H:i:s', strtotime("-$rate_limit_days days"));
 
         foreach ($statuses as $status) {
             // Get users with specific status
@@ -527,7 +527,7 @@ class Stripe_Onboarding_Reminders_Core
 
             <div style="text-align: center; font-size: 12px; color: #7f8c8d; margin-top: 30px;">
                 <p>This is an automated message from <?php echo esc_html($site_name); ?>.</p>
-                <p>&copy; <?php echo date('Y'); ?> <?php echo esc_html($site_name); ?>. All rights reserved.</p>
+                <p>&copy; <?php echo esc_html(gmdate('Y')); ?> <?php echo esc_html($site_name); ?>. All rights reserved.</p>
             </div>
         </body>
 
@@ -544,7 +544,8 @@ class Stripe_Onboarding_Reminders_Core
     private function log(string $message): void
     {
         if (defined('WP_DEBUG') && WP_DEBUG === true && defined('WP_DEBUG_LOG') && WP_DEBUG_LOG === true) {
-            error_log('[Stripe Onboarding Reminders] ' . $message);
+            // Use sanitized error_log with WordPress debug constants
+            error_log(sanitize_text_field('[Stripe Onboarding Reminders] ' . $message));
         }
     }
 

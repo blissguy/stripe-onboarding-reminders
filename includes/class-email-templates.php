@@ -172,7 +172,7 @@ class Stripe_Onboarding_Reminders_Email_Templates
                     if ($custom_logo_id) {
                         $logo = wp_get_attachment_image_src($custom_logo_id, 'full');
                         if ($logo) {
-                            echo '<img src="' . esc_url($logo[0]) . '" alt="' . esc_attr($site_name) . '" class="site-logo">';
+                            echo wp_get_attachment_image($custom_logo_id, 'full', false, ['class' => 'site-logo', 'alt' => esc_attr($site_name)]);
                         } else {
                             echo '<h1>' . esc_html($site_name) . '</h1>';
                         }
@@ -182,7 +182,7 @@ class Stripe_Onboarding_Reminders_Email_Templates
                     ?>
                 </div>
                 <div class="content">
-                    <p><?php echo sprintf(__('Hello %s,', 'stripe-onboarding-reminders'), esc_html($user_name)); ?></p>
+                    <p><?php echo esc_html(sprintf(__('Hello %s,', 'stripe-onboarding-reminders'), esc_html($user_name))); ?></p>
 
                     <?php echo wp_kses_post($template_content); ?>
 
@@ -198,10 +198,10 @@ class Stripe_Onboarding_Reminders_Email_Templates
                     <?php echo wp_kses_post($footer_content); ?>
                 </div>
                 <div class="footer">
-                    <p><?php echo sprintf(
+                    <p><?php echo esc_html(sprintf(
                             __('This is an automated reminder from %s. You are receiving this because you have an incomplete Stripe onboarding process.', 'stripe-onboarding-reminders'),
                             esc_html($site_name)
-                        ); ?></p>
+                        )); ?></p>
                 </div>
             </div>
         </body>
@@ -328,7 +328,7 @@ class Stripe_Onboarding_Reminders_Email_Templates
 
             <hr>
 
-            <?php echo $original_email; ?>
+            <?php echo wp_kses_post($original_email); ?>
         </body>
 
         </html>
@@ -349,10 +349,10 @@ class Stripe_Onboarding_Reminders_Email_Templates
     {
         // Create a wrapper around the original email
         $admin_header = '<div style="padding: 15px; background-color: #f0f0f1; border-bottom: 4px solid #2271b1; margin-bottom: 20px;">';
-        $admin_header .= '<h2 style="margin: 0; color: #2c3338; font-size: 18px;">' . __('Admin Copy of Email Sent to User', 'stripe-onboarding-reminders') . '</h2>';
-        $admin_header .= '<p style="margin: 10px 0 0 0;"><strong>' . __('User:', 'stripe-onboarding-reminders') . '</strong> ' . esc_html($user->display_name) . ' (' . esc_html($user->user_email) . ')</p>';
-        $admin_header .= '<p style="margin: 5px 0 0 0;"><strong>' . __('Status:', 'stripe-onboarding-reminders') . '</strong> ' . esc_html($this->get_status_display_name($status)) . '</p>';
-        $admin_header .= '<p style="margin: 5px 0 0 0;"><strong>' . __('Sent:', 'stripe-onboarding-reminders') . '</strong> ' . esc_html(date_i18n(get_option('date_format') . ' ' . get_option('time_format'))) . '</p>';
+        $admin_header .= '<h2 style="margin: 0; color: #2c3338; font-size: 18px;">' . esc_html(__('Admin Copy of Email Sent to User', 'stripe-onboarding-reminders')) . '</h2>';
+        $admin_header .= '<p style="margin: 10px 0 0 0;"><strong>' . esc_html(__('User:', 'stripe-onboarding-reminders')) . '</strong> ' . esc_html($user->display_name) . ' (' . esc_html($user->user_email) . ')</p>';
+        $admin_header .= '<p style="margin: 5px 0 0 0;"><strong>' . esc_html(__('Status:', 'stripe-onboarding-reminders')) . '</strong> ' . esc_html($this->get_status_display_name($status)) . '</p>';
+        $admin_header .= '<p style="margin: 5px 0 0 0;"><strong>' . esc_html(__('Sent:', 'stripe-onboarding-reminders')) . '</strong> ' . esc_html(date_i18n(get_option('date_format') . ' ' . get_option('time_format'))) . '</p>';
         $admin_header .= '</div>';
 
         // Insert the admin header right after the opening body tag
