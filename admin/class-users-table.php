@@ -59,8 +59,8 @@ class Stripe_Onboarding_Reminders_Users_Table extends WP_List_Table
             return false;
         }
 
-        // Return result of nonce verification
-        return wp_verify_nonce(wp_unslash($_REQUEST['_wpnonce']), $action);
+        // Return result of nonce verification (cast to boolean)
+        return (bool) wp_verify_nonce(wp_unslash($_REQUEST['_wpnonce']), $action);
     }
 
     /**
