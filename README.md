@@ -110,6 +110,52 @@ Found a bug or have a feature request? Please [open an issue](https://github.com
 
 This plugin is licensed under the GPL v2 or later.
 
+## 📦 Distribution Notes
+
+When creating a ZIP file for distribution or updates:
+
+1. **Consistent Folder Name**: Always use `stripe-onboarding-reminders` as the main folder name inside the ZIP.
+2. **Proper Directory Structure**:
+   ```
+   stripe-onboarding-reminders.zip
+   └── stripe-onboarding-reminders/
+       ├── stripe-onboarding-reminders.php
+       ├── includes/
+       ├── admin/
+       └── ... other files and directories
+   ```
+3. **Avoid Version Numbers in Folder Names**: Do not include version numbers or suffixes in the main folder name (e.g., avoid names like `stripe-onboarding-reminders-1.0.1` or `stripe-onboarding-reminders-main`).
+
+Following these guidelines ensures WordPress recognizes updates correctly instead of treating each version as a separate plugin.
+
+### Creating GitHub Releases
+
+When creating releases on GitHub:
+
+1. **Use the build script**: Always run `./build.sh` before creating a GitHub release
+2. **Upload the correct ZIP**: Attach the `stripe-onboarding-reminders.zip` file created by the build script to your release
+3. **Tag properly**: Use semantic versioning with a 'v' prefix (e.g., `v1.0.2`) for your release tags
+
+### For Users Downloading from GitHub
+
+If you download this plugin directly from GitHub (not from a proper release):
+
+1. Download the ZIP from the release assets (not the "Code" button)
+2. If you must use the "Code" download, you have two options:
+
+   **Option A: Use the repackage script**
+
+   - Download and extract the repository
+   - Run `./repackage.sh stripe-onboarding-reminders-main.zip` (replace with your downloaded ZIP name)
+   - Use the newly created `stripe-onboarding-reminders.zip` for installation
+
+   **Option B: Manual repackaging**
+
+   - Extract the ZIP file
+   - Rename the top-level folder to `stripe-onboarding-reminders` (remove any `-main`, `-master` or version suffixes)
+   - Compress the folder into a new ZIP
+   - Use this new ZIP to install the plugin
+
 ---
 
 Made with ❤️ for the Voxel community

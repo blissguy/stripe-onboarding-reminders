@@ -1,0 +1,29 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build plugin
+        run: |
+          chmod +x ./build.sh
+          ./build.sh
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            stripe-onboarding-reminders.zip
+            stripe-onboarding-reminders-*.zip
+          draft: false
+          prerelease: false
+          generate_release_notes: true
