@@ -20,7 +20,7 @@ A WordPress plugin that automatically sends reminder emails to Voxel marketplace
 
 - WordPress 5.6+
 - PHP 7.4+
-- Voxel Theme 1.6+
+- Voxel Theme 1.5+
 - WP Cron enabled on your server
 
 ## ⚙️ Installation
