@@ -110,31 +110,6 @@ Found a bug or have a feature request? Please [open an issue](https://github.com
 
 This plugin is licensed under the GPL v2 or later.
 
-## 📦 Distribution Notes
-
-When creating a ZIP file for distribution or updates:
-
-1. **Consistent Folder Name**: Always use `stripe-onboarding-reminders` as the main folder name inside the ZIP.
-2. **Proper Directory Structure**:
-   ```
-   stripe-onboarding-reminders.zip
-   └── stripe-onboarding-reminders/
-       ├── stripe-onboarding-reminders.php
-       ├── includes/
-       ├── admin/
-       └── ... other files and directories
-   ```
-3. **Avoid Version Numbers in Folder Names**: Do not include version numbers or suffixes in the main folder name (e.g., avoid names like `stripe-onboarding-reminders-1.0.1` or `stripe-onboarding-reminders-main`).
-
-Following these guidelines ensures WordPress recognizes updates correctly instead of treating each version as a separate plugin.
-
-### Creating GitHub Releases
-
-When creating releases on GitHub:
-
-1. **Use the build script**: Always run `./build.sh` before creating a GitHub release
-2. **Upload the correct ZIP**: Attach the `stripe-onboarding-reminders.zip` file created by the build script to your release
-3. **Tag properly**: Use semantic versioning with a 'v' prefix (e.g., `v1.0.2`) for your release tags
 
 ### For Users Downloading from GitHub
 
